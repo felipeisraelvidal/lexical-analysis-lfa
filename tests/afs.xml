@@ -1,0 +1,21 @@
+<AFD>
+    <symbols>
+        <symbol id="0" value="a" />
+        <symbol id="1" value="b" />
+        <symbol id="2" value="c" />
+    </symbols>
+    <states>
+        <state id="0" value="q0" />
+        <state id="1" value="q1" />
+        <state id="2" value="q2" />
+    </states>
+    <transitions>
+        <transition from="0" to="1" symbol="0" />
+        <transition from="1" to="2" symbol="1" />
+        <transition from="2" to="0" symbol="2" />
+    </transitions>
+    <finalStates>
+        <finalState id="2" />
+    </finalStates>
+    <initialState id="1" />
+</AFD>
