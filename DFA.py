@@ -15,7 +15,7 @@ for line in lines_states:
 lines_symbols = soup.find_all('symbol')
 SYMBOLS = []
 for line in lines_symbols:
-    SYMBOLS.appen(line['value'])
+    SYMBOLS.append(line['value'])
 
 lines_transitions = soup.find_all('transition')
 TRANSITIONS_FROM = []
