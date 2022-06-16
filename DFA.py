@@ -10,31 +10,31 @@ soup = BeautifulSoup(file, 'xml')
 lines_states = soup.find_all('state')
 STATES = []
 for line in lines_states:
-    STATES = line['value']
+    STATES.append(line['value'])
 
 lines_symbols = soup.find_all('symbol')
 SYMBOLS = []
 for line in lines_symbols:
-    SYMBOLS = line['value']
+    SYMBOLS.appen(line['value'])
 
 lines_transitions = soup.find_all('transition')
 TRANSITIONS_FROM = []
 TRANSITIONS_TO = []
 TRANSITIONS_SYMBOL = []
 for line in lines_transitions:
-    TRANSITIONS_SYMBOL = line['symbol']
-    TRANSITIONS_FROM = line['from']
-    TRANSITIONS_TO = line['to']
+    TRANSITIONS_SYMBOL.append(line['symbol'])
+    TRANSITIONS_FROM.append(line['from'])
+    TRANSITIONS_TO.append(line['to'])
 
 lines_finalState = soup.find_all('finalState')
 FINAL_STATE = []
 for line in lines_finalState:
-    FINAL_STATE = line['id']
+    FINAL_STATE.append(line['id'])
 
 lines_initialState = soup.find_all('initialState')
 INITIAL_STATE = []
 for line in lines_initialState:
-    INITIAL_STATE = line['id']
+    INITIAL_STATE.append(line['id'])
 
 class DFA:
 
@@ -63,6 +63,7 @@ class DFA:
         """Takes user input for states (Q)"""
         Q_input = input("Enter list of states separated by spaces: ").split()
         print("STATES : {}".format(Q_input))
+        print(STATES)
         return Q_input
 
     def populate_alphabet(self):
