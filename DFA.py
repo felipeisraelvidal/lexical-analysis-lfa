@@ -1,38 +1,6 @@
 from bs4 import BeautifulSoup
 
-with open('tests/afd.xml', 'r') as f:
-    file = f.read()
 
-soup = BeautifulSoup(file, 'xml')
-
-lines_states = soup.find_all('state')
-states = []
-for line in lines_states:
-    states = line['value']
-
-lines_symbols = soup.find_all('symbol')
-symbols = []
-for line in lines_symbols:
-    symbols = line['value']
-
-lines_transitions = soup.find_all('transition')
-transitions_from = []
-transitions_to = []
-transitions_symbol = []
-for line in lines_transitions:
-    transitions_symbol = line['symbol']
-    transitions_from = line['from']
-    transitions_to = line['to']
-
-lines_finalState = soup.find_all('finalState')
-finalState = []
-for line in lines_finalState:
-    finalState = line['id']
-
-lines_initialState = soup.find_all('initialState')
-initialState = []
-for line in lines_initialState:
-    initialState = line['id']
 
 class DFA:
 
@@ -43,6 +11,41 @@ class DFA:
         self.DELTA = self.populate_transition_function()
         self.START_STATE, self.ACCEPT_STATES = self.set_start_accept()
         self.CURRENT_STATE = None
+        
+    def readxml(self):
+        with open('tests/afd.xml', 'r') as f:
+            file = f.read()
+
+        soup = BeautifulSoup(file, 'xml')
+
+        lines_states = soup.find_all('state')
+        states = []
+        for line in lines_states:
+            states = line['value']
+
+        lines_symbols = soup.find_all('symbol')
+        symbols = []
+        for line in lines_symbols:
+            symbols = line['value']
+
+        lines_transitions = soup.find_all('transition')
+        transitions_from = []
+        transitions_to = []
+        transitions_symbol = []
+        for line in lines_transitions:
+            transitions_symbol = line['symbol']
+            transitions_from = line['from']
+            transitions_to = line['to']
+
+        lines_finalState = soup.find_all('finalState')
+        finalState = []
+        for line in lines_finalState:
+            finalState = line['id']
+
+        lines_initialState = soup.find_all('initialState')
+        initialState = []
+        for line in lines_initialState:
+            initialState = line['id']
 
     def set_start_accept(self):
         """Takes user input for START_STATE and ACCEPT_STATE, and checks if it's a valid state (if it belongs to Q)"""
