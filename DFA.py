@@ -60,11 +60,8 @@ class DFA:
                         self.Q))
 
     def populate_states(self):
-        """Takes user input for states (Q)"""
-        Q_input = input("Enter list of states separated by spaces: ").split()
-        print("STATES : {}".format(Q_input))
-        print(STATES)
-        return Q_input
+        print("states: {}".format(STATES))
+        return STATES
 
     def populate_alphabet(self):
         """Takes user input for alphabet/symbols (SIGMA)"""
