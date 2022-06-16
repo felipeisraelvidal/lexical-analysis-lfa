@@ -1,38 +1,40 @@
 from bs4 import BeautifulSoup
 
+# LEITURA DO ARQUIVO XML / GET valores do arquivo XML
+
 with open('tests/afd.xml', 'r') as f:
     file = f.read()
 
 soup = BeautifulSoup(file, 'xml')
 
 lines_states = soup.find_all('state')
-states = []
+STATES = []
 for line in lines_states:
-    states = line['value']
+    STATES = line['value']
 
 lines_symbols = soup.find_all('symbol')
-symbols = []
+SYMBOLS = []
 for line in lines_symbols:
-    symbols = line['value']
+    SYMBOLS = line['value']
 
 lines_transitions = soup.find_all('transition')
-transitions_from = []
-transitions_to = []
-transitions_symbol = []
+TRANSITIONS_FROM = []
+TRANSITIONS_TO = []
+TRANSITIONS_SYMBOL = []
 for line in lines_transitions:
-    transitions_symbol = line['symbol']
-    transitions_from = line['from']
-    transitions_to = line['to']
+    TRANSITIONS_SYMBOL = line['symbol']
+    TRANSITIONS_FROM = line['from']
+    TRANSITIONS_TO = line['to']
 
 lines_finalState = soup.find_all('finalState')
-finalState = []
+FINAL_STATE = []
 for line in lines_finalState:
-    finalState = line['id']
+    FINAL_STATE = line['id']
 
 lines_initialState = soup.find_all('initialState')
-initialState = []
+INITIAL_STATE = []
 for line in lines_initialState:
-    initialState = line['id']
+    INITIAL_STATE = line['id']
 
 class DFA:
 
