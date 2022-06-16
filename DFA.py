@@ -5,15 +5,34 @@ with open('tests/afd.xml', 'r') as f:
 
 soup = BeautifulSoup(file, 'xml')
 
-states = soup.find_all('state')
-for state in states:
-    print(state['value'])
+lines_states = soup.find_all('state')
+states = []
+for line in lines_states:
+    states = line['value']
 
+lines_symbols = soup.find_all('symbol')
+symbols = []
+for line in lines_symbols:
+    symbols = line['value']
 
-# symbols = soup.find_all('symbol')
-# transitions = soup.find_all('transition')
-# finalState = soup.find_all('finalState')
-# initialState = soup.find_all('initialState')
+lines_transitions = soup.find_all('transition')
+transitions_from = []
+transitions_to = []
+transitions_symbol = []
+for line in lines_transitions:
+    transitions_symbol = line['symbol']
+    transitions_from = line['from']
+    transitions_to = line['to']
+
+lines_finalState = soup.find_all('finalState')
+finalState = []
+for line in lines_finalState:
+    finalState = line['id']
+
+lines_initialState = soup.find_all('initialState')
+initialState = []
+for line in lines_initialState:
+    initialState = line['id']
 
 class DFA:
 
