@@ -60,14 +60,12 @@ class DFA:
                         self.Q))
 
     def populate_states(self):
-        print("states: {}".format(STATES))
+        print("STATES: {}".format(STATES))
         return STATES
 
     def populate_alphabet(self):
-        """Takes user input for alphabet/symbols (SIGMA)"""
-        SIGMA_input = input("Enter input alphabet separated by spaces: ").split()
-        print("ALPHABET : {}".format(SIGMA_input))
-        return SIGMA_input
+        print("ALPHABET : {}".format(SYMBOLS))
+        return SYMBOLS
 
     def populate_transition_function(self):
         """Creates the transition function (Q X SIGMA -> Q) and prints it out"""
