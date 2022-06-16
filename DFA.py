@@ -18,13 +18,6 @@ for line in lines_symbols:
     SYMBOLS.append(line['value'])
 
 lines_transitions = soup.find_all('transition')
-TRANSITIONS_FROM = []
-TRANSITIONS_TO = []
-TRANSITIONS_SYMBOL = []
-for line in lines_transitions:
-    TRANSITIONS_SYMBOL.append(line['symbol'])
-    TRANSITIONS_FROM.append(line['from'])
-    TRANSITIONS_TO.append(line['to'])
 
 lines_finalState = soup.find_all('finalState')
 FINAL_STATE = []
@@ -72,11 +65,14 @@ class DFA:
         transition_dict = {el: {el_2: 'REJECT' for el_2 in self.SIGMA} for el in self.Q}
 
         for key, dict_value in transition_dict.items():
-            print("Enter transitions for state {}. If required, use 'REJECT'.".format(key))
+            for line in lines_transitions:
+                transition_dict[line['from']][line['symbol']] = line['to']
 
-            for input_alphabet, transition_state in dict_value.items():
-                transition_dict[key][input_alphabet] = input(
-                    "CURRENT STATE : {}\tINPUT ALPHABET : {}\tNEXT STATE : ".format(key, input_alphabet))
+            # print("Enter transitions for state {}. If required, use 'REJECT'.".format(key))
+
+            # for input_alphabet, transition_state in dict_value.items():
+                # transition_dict[key][input_alphabet] = input(
+                    # "CURRENT STATE : {}\tINPUT ALPHABET : {}\tNEXT STATE : ".format(key, input_alphabet))
 
         print("\nTRANSITION FUNCTION Q X SIGMA -> Q")
         print("CURRENT STATE\tINPUT ALPHABET\tNEXT STATE")

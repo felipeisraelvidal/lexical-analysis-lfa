@@ -10,12 +10,12 @@
         <state id="2" value="q2" />
     </states>
     <transitions>
-        <transition from="0" to="1" symbol="0" />
-        <transition from="1" to="2" symbol="1" />
-        <transition from="2" to="0" symbol="2" />
+        <transition from="q0" to="q1" symbol="a" />
+        <transition from="q1" to="q2" symbol="b" />
+        <transition from="q2" to="q0" symbol="c" />
     </transitions>
     <finalStates>
-        <finalState id="2" />
+        <finalState id="q2" />
     </finalStates>
-    <initialState id="1" />
+    <initialState id="q0" />
 </AFD>
