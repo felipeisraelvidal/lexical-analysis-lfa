@@ -15,7 +15,7 @@
         <transition from="q2" to="q0" symbol="c" />
     </transitions>
     <finalStates>
-        <finalState id="q2" />
+        <finalState id="q1" />
     </finalStates>
     <initialState id="q0" />
 </AFD>

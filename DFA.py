@@ -1,3 +1,5 @@
+import sys
+
 from bs4 import BeautifulSoup
 
 # LEITURA DO ARQUIVO XML / GET valores do arquivo XML
@@ -105,9 +107,9 @@ if __name__ == "__main__":
     print("\nDeterministic Finite State Machine.")
     machine = DFA()
     while (check):
-        choice = int(input("\nEnter Choice:\n1. Replace DFSM\n2. Run DFSM on input string\nEnter choice : "))
+        choice = int(input("\nEnter Choice:\n1. Exit\n2. Run DFSM on input string\nEnter choice : "))
         if (choice == 1):
-            machine = DFA()
+            sys.exit()
         elif (choice == 2):
             input_string = list(input("Enter the input string : "))
             print("ACCEPTED" if machine.run_machine(input_string) else "REJECTED")
