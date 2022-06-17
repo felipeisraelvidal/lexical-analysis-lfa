@@ -45,31 +45,30 @@ class DFA:
         """Takes user input for START_STATE and ACCEPT_STATE, and checks if it's a valid state (if it belongs to Q)"""
         # while (True):
         start = INITIAL_STATE
-        print("START STATE: {}".format(start))
+        print("ESTADO INICIAL: {}".format(start))
         accept = FINAL_STATE
-        print("FINAL STATE: {}".format(accept))
+        print("ESTADO FINAL: {}".format(accept))
 
         return start, accept
 
     def populate_states(self):
-        print("STATES: {}".format(STATES))
+        print("ESTADOS: {}".format(STATES))
         return STATES
 
     def populate_alphabet(self):
-        print("ALPHABET : {}".format(SYMBOLS))
+        print("ALFABETO: {}".format(SYMBOLS))
         return SYMBOLS
 
     def populate_transition_function(self):
         """Creates the transition function (Q X SIGMA -> Q) and prints it out"""
         transition_dict = {el: {el_2: 'REJECT' for el_2 in self.SIGMA} for el in self.Q}
-        print(transition_dict)
 
         for key in transition_dict.items():
             for transition in TRANSITIONS:
                 transition_dict[transition['from']][transition['symbol']] = transition['to']
 
-        print("\nTRANSITION FUNCTION Q X SIGMA -> Q")
-        print("CURRENT STATE\tINPUT ALPHABET\tNEXT STATE")
+        print("\nFUNÇÃO TRANSIÇÃO Q X SIGMA -> Q")
+        print("ESTADO ATUAL\tALFABETO DE ENTRADA\tPRÓXIMO ESTADO")
         for key, dict_value in transition_dict.items():
             for input_alphabet, transition_state in dict_value.items():
                 print("{}\t\t{}\t\t{}".format(key, input_alphabet, transition_state))
@@ -80,7 +79,7 @@ class DFA:
         """Takes in current state and goes to next state based on input symbol."""
         if (self.CURRENT_STATE == 'REJECT'):
             return False
-        print("CURRENT STATE : {}\tINPUT SYMBOL : {}\t NEXT STATE : {}".format(self.CURRENT_STATE, input_symbol,self.DELTA[self.CURRENT_STATE][input_symbol]))
+        print("ESTADO ATUAL : {}\tSÍMBOLOS DE ENTRADA : {}\t PRÓXIMO ESTADO : {}".format(self.CURRENT_STATE, input_symbol,self.DELTA[self.CURRENT_STATE][input_symbol]))
         self.CURRENT_STATE = self.DELTA[self.CURRENT_STATE][input_symbol]
         return self.CURRENT_STATE
 
@@ -104,14 +103,14 @@ class DFA:
 
 if __name__ == "__main__":
     check = True
-    print("\nDeterministic Finite State Machine.")
+    print("\nMáquina de AFD.")
     machine = DFA()
     while (check):
-        choice = int(input("\nEnter Choice:\n1. Exit\n2. Run DFSM on input string\nEnter choice : "))
+        choice = int(input("\nEscolha uma opção:\n1. Exit\n2. Execute a palavra no AFD\nDigite a sua escolha : "))
         if (choice == 1):
             sys.exit()
         elif (choice == 2):
-            input_string = list(input("Enter the input string : "))
-            print("ACCEPTED" if machine.run_machine(input_string) else "REJECTED")
+            input_string = list(input("Digite a palavra : "))
+            print("ACEITA" if machine.run_machine(input_string) else "REJEITADA")
         else:
             check = False
