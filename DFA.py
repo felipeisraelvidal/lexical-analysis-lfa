@@ -20,14 +20,14 @@ for line in lines_symbols:
 TRANSITIONS = soup.find_all('transition')
 
 lines_finalState = soup.find_all('finalState')
-FINAL_STATE = []
+FINAL_STATE = None
 for line in lines_finalState:
-    FINAL_STATE.append(line['id'])
+    FINAL_STATE = line['id']
 
 lines_initialState = soup.find_all('initialState')
-INITIAL_STATE = []
+INITIAL_STATE = None
 for line in lines_initialState:
-    INITIAL_STATE.append(line['id'])
+    INITIAL_STATE = line['id']
 
 class DFA:
 
@@ -48,13 +48,17 @@ class DFA:
         print("FINAL STATE: {}".format(accept))
 
         return start, accept
-            # Making sure that start and accept are both in Q and that start and accept are not the state
-            # if (start in self.Q) and (set(accept).issubset(set(self.Q))):
-                # return start, accept
-            # else:
-                # print(
-                    # "Please enter STATE_STATE and ACCEPT_STATES that are in Q : {}.\nAccept states should be a valid subset of Q\n".format(
-                        # self.Q))
+
+        # Making sure that start and accept are both in Q and that start and accept are not the state
+        # if (start in self.Q) and (set(accept).issubset(set(self.Q))):
+        #     print('ok')
+        #
+        # else:
+        #     print(
+        #         "Please enter STATE_STATE and ACCEPT_STATES that are in Q : {}.\nAccept states should be a valid subset of Q\n".format(
+        #             self.Q))
+
+
 
     def populate_states(self):
         print("STATES: {}".format(STATES))
@@ -85,9 +89,7 @@ class DFA:
         """Takes in current state and goes to next state based on input symbol."""
         if (self.CURRENT_STATE == 'REJECT'):
             return False
-        print("CURRENT STATE : {}\tINPUT SYMBOL : {}\t NEXT STATE : {}".format(self.CURRENT_STATE, input_symbol,
-                                                                               self.DELTA[self.CURRENT_STATE][
-                                                                                   input_symbol]))
+        print("CURRENT STATE : {}\tINPUT SYMBOL : {}\t NEXT STATE : {}".format(self.CURRENT_STATE, input_symbol,self.DELTA[self.CURRENT_STATE][input_symbol]))
         self.CURRENT_STATE = self.DELTA[self.CURRENT_STATE][input_symbol]
         return self.CURRENT_STATE
 
@@ -100,7 +102,7 @@ class DFA:
 
     def run_machine(self, in_string):
         """Run the machine on input string"""
-        self.CURRENT_STATE = self.START_STATE
+        self.CURRENT_STATE = INITIAL_STATE
         for ele in in_string:
             check_state = self.run_state_transition(ele)
             # Check if new state is not REJECT
