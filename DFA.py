@@ -49,17 +49,6 @@ class DFA:
 
         return start, accept
 
-        # Making sure that start and accept are both in Q and that start and accept are not the state
-        # if (start in self.Q) and (set(accept).issubset(set(self.Q))):
-        #     print('ok')
-        #
-        # else:
-        #     print(
-        #         "Please enter STATE_STATE and ACCEPT_STATES that are in Q : {}.\nAccept states should be a valid subset of Q\n".format(
-        #             self.Q))
-
-
-
     def populate_states(self):
         print("STATES: {}".format(STATES))
         return STATES
