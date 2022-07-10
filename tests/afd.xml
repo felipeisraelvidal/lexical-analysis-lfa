@@ -19,7 +19,7 @@
         <delimiter value=" " />
     </delimiters>
     <finalStates>
-        <finalState id="q1" />
+        <finalState id="q0" />
     </finalStates>
     <initialState id="q0" />
 </AFD>
