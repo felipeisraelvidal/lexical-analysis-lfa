@@ -22,7 +22,7 @@ class DFA:
         self.START_STATE, self.ACCEPT_STATES = self.set_start_accept()
         self.CURRENT_STATE = None
 
-    def leituraarquivo(self):
+    def leitura_arquivo(self, input_file):
         palavras_arquivo = ""
         vet_palavra = []
         palavra = ""
@@ -30,8 +30,9 @@ class DFA:
         cont = 0
         verifica_delimitador_unico = False
 
-        with open("tests/leitura.txt", "r") as arquivo:
+        with open(input_file, "r") as arquivo:
             palavras_arquivo = arquivo.read()
+            palavras_arquivo = palavras_arquivo.replace('\n', '')
 
         for i in palavras_arquivo:
             rascunho_palavra += i
@@ -55,20 +56,14 @@ class DFA:
 
     def set_start_accept(self):
         """Takes user input for START_STATE and ACCEPT_STATE, and checks if it's a valid state (if it belongs to Q)"""
-        # while (True):
         start = self.INITIAL_STATE
-        # print("ESTADO INICIAL: {}".format(start))
         accept = self.FINAL_STATE
-        # print("ESTADO FINAL: {}".format(accept))
-
         return start, accept
 
     def populate_states(self):
-        # print("ESTADOS: {}".format(STATES))
         return self.STATES
 
     def populate_alphabet(self):
-        # print("ALFABETO: {}".format(SYMBOLS))
         return self.SYMBOLS
 
     def populate_transition_function(self):
@@ -79,20 +74,15 @@ class DFA:
             for transition in self.TRANSITIONS:
                 transition_dict[transition['from']][transition['symbol']] = transition['to']
 
-        # print("\nFUNÇÃO TRANSIÇÃO Q X SIGMA -> Q")
-        # print("ESTADO ATUAL\tALFABETO DE ENTRADA\tPRÓXIMO ESTADO")
-        # for key, dict_value in transition_dict.items():
-        #     for input_alphabet, transition_state in dict_value.items():
-        #         print("{}\t\t{}\t\t{}".format(key, input_alphabet, transition_state))
-
         return transition_dict
 
     def run_state_transition(self, input_symbol):
         """Takes in current state and goes to next state based on input symbol."""
         if (self.CURRENT_STATE == 'REJECT'):
             return False
-        # print("ESTADO ATUAL : {}\tSÍMBOLOS DE ENTRADA : {}\t PRÓXIMO ESTADO : {}".format(self.CURRENT_STATE, input_symbol,self.DELTA[self.CURRENT_STATE][input_symbol]))
+
         self.CURRENT_STATE = self.DELTA[self.CURRENT_STATE][input_symbol]
+        
         return self.CURRENT_STATE
 
     def check_if_accept(self):
@@ -105,9 +95,12 @@ class DFA:
     def run_machine(self, in_string):
         """Run the machine on input string"""
         self.CURRENT_STATE = self.INITIAL_STATE
+        
         for ele in in_string:
             check_state = self.run_state_transition(ele)
+            
             # Check if new state is not REJECT
             if (check_state == 'REJECT'):
                 return False
+
         return self.check_if_accept()

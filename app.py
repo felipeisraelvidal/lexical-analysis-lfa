@@ -1,8 +1,8 @@
-import sys
+import getopt, sys
 from DFA import DFA
 from bs4 import BeautifulSoup
 
-def read_file(file_path):
+def read_machine_file(file_path):
     with open(file_path, 'r') as f:
         file = f.read()
 
@@ -37,21 +37,64 @@ def read_file(file_path):
 
     return (STATES, SYMBOLS, TRANSITIONS, DELIMETERS, FINAL_STATE, INITIAL_STATE)
 
-if __name__ == "__main__":
+def main(argv):
     check = True
-    # print("\nMáquina de AFD.")
-    afd = read_file('tests/afd.xml')
-    print('teste: {}'.format(afd[0]))
+
+    machine_file = ''
+    input_file = ''
+    output_file = ''
+
+    try:
+        opts, args = getopt.getopt(argv, 'hm:i:o:', ['mfile=', 'ifile=', 'ofile='])
+    except getopt.GetoptError:
+        print('app.py -m <machinefile> -i <inputfile> -o <outputfile>')
+        sys.exit(2)
+
+    for opt, arg in opts:
+        if opt == '-h':
+            print('app.py -m <machinefile> -i <inputfile> -o <outputfile>')
+            sys.exit()
+        elif opt in ("-m", "--mfile"):
+            machine_file = arg
+        elif opt in ("-i", "--ifile"):
+            input_file = arg
+        elif opt in ("-o", "--ofile"):
+            output_file = arg
+
+    afd = read_machine_file(machine_file)
     machine = DFA(afd[0], afd[1], afd[2], afd[3], afd[4], afd[5])
+    
     while (check):
         choice = int(input("\nEscolha uma opção:\n1. Exit\n2. Execute a palavra no AFD\nDigite a sua escolha : "))
         if (choice == 1):
             sys.exit()
         elif (choice == 2):
-            palavras = machine.leituraarquivo()
-            resultado = open("resultado.txt", "w")
+            palavras = machine.leitura_arquivo(input_file)
+            
+            resultado = open(output_file, "w")
+            resultado.write('Análise Léxica:\n')
+
+            number_of_accepted_tokens = 0
+            number_of_invalid_tokens = 0
+            
             for palavra in palavras:
-                resultado.write("{} : ACEITA\n".format(palavra) if machine.run_machine(palavra) else "{} : Erro lexico!\n".format(palavra))
+                if palavra != '':
+                    if machine.run_machine(palavra):
+                        number_of_accepted_tokens += 1
+                        resultado.write("\t{}\t\t\tACCEPTED\n".format(palavra))
+                    else:
+                        number_of_invalid_tokens += 1
+                        resultado.write("\t{}\t\t\tLEXICAL ERROR\n".format(palavra))
+            
+            resultado.write('\n------------------------------\n')
+            resultado.write(f'Number of tokens analyzed: {number_of_accepted_tokens + number_of_invalid_tokens}\n')
+            resultado.write(f'Number of accepted tokens: {number_of_accepted_tokens}\n')
+            resultado.write(f'Number of invalid tokens: {number_of_invalid_tokens}\n')
+            resultado.write('------------------------------\n')
+
             resultado.close()
         else:
             check = False
+
+if __name__ == "__main__":
+    main(sys.argv[1:])
