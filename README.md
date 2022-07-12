@@ -10,4 +10,4 @@ Open the terminal and run the following command:
 
 Open the terminal and run the following command:
 
-`python3 app.py -m <machine_file> -i <input_file> -o <output_file>`
+`python3 app.py -m <machine_file> -o <output_file>`

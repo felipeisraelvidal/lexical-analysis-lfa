@@ -1,5 +1,6 @@
 import getopt, sys
 from DFA import DFA
+from helpers import *
 
 def read_input_file(file_path):
     with open(file_path, "r") as arquivo:
@@ -18,7 +19,6 @@ def start_analysis(machine, str_input, output_file):
     number_of_invalid_tokens = 0
     
     max_token_length = len(max(tokens, key=len))
-    print(max_token_length)
     for token in tokens:
         if token != '':
             if machine.run_machine(token):
@@ -40,37 +40,59 @@ def main(argv):
     check = True
 
     machine_file = ''
-    input_file = ''
     output_file = ''
 
     try:
-        opts, _ = getopt.getopt(argv, 'hm:i:o:', ['mfile=', 'ifile=', 'ofile='])
+        opts, _ = getopt.getopt(argv, 'hm:o:', ['mfile=', 'ofile='])
     except getopt.GetoptError:
-        print('app.py -m <machinefile> -i <inputfile> -o <outputfile>')
+        print('app.py -m <machinefile> -o <outputfile>')
         sys.exit(2)
 
     for opt, arg in opts:
         if opt == '-h':
-            print('app.py -m <machinefile> -i <inputfile> -o <outputfile>')
+            print('app.py -m <machinefile> -o <outputfile>')
             sys.exit()
         elif opt in ("-m", "--mfile"):
             machine_file = arg
-        elif opt in ("-i", "--ifile"):
-            input_file = arg
         elif opt in ("-o", "--ofile"):
             output_file = arg
+
+    if machine_file == '' or output_file == '':
+        print('Invalid machine file or output file')
+        sys.exit()
 
     afd = DFA.read_machine_file(machine_file)
     machine = DFA(afd[0], afd[1], afd[2], afd[3], afd[4], afd[5])
 
-    str_input = read_input_file(input_file)
-    
     while (check):
-        choice = int(input("\nEscolha uma opção:\n1. Exit\n2. Execute a palavra no AFD\nDigite a sua escolha: "))
+        choice = int(input("\nMenu:\n1. Read text file\n2. Enter text\n3. Exit\nChoose an option: "))
         if (choice == 1):
-            sys.exit()
-        elif (choice == 2):
+            default_input_file_path = 'resources/input.txt'
+            
+            print('------------------------------------------------------------')
+            print('Input file:')
+            print_italic(f'Hint: you can use the existing file at \'{default_input_file_path}\'. Tap enter to use it.')
+            
+            input_file = input('path: ')
+            if input_file == '':
+                input_file = default_input_file_path
+            
+            print('------------------------------------------------------------')
+
+            str_input = read_input_file(input_file)
+
             start_analysis(machine, str_input, output_file)
+        elif (choice == 2):
+            print('------------------------------------------------------------')
+            print('Input text:')
+
+            str_input = input('text: ')
+
+            print('------------------------------------------------------------')
+
+            start_analysis(machine, str_input, output_file)
+        elif (choice == 3):
+            sys.exit()
         else:
             check = False
 
