@@ -114,7 +114,10 @@ class DFA:
         if (self.current_state == 'REJECT'):
             return False
 
-        self.current_state = self.delta[self.current_state][input_symbol]
+        if input_symbol not in self.symbols:
+            self.current_state = 'REJECT'
+        else:
+            self.current_state = self.delta[self.current_state][input_symbol]
         
         return self.current_state
 

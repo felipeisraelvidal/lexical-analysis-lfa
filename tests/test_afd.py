@@ -29,5 +29,9 @@ class TestAFD(unittest.TestCase):
         result = self.machine.run_machine('abcabc')
         self.assertTrue(result)
 
+    def test_ABBCDA(self):
+        result = self.machine.run_machine('abbcda')
+        self.assertFalse(result)
+
 if __name__ == 'main':
     unittest.main()
