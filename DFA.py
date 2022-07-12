@@ -1,65 +1,93 @@
-import sys
-
 from bs4 import BeautifulSoup
-
-# LEITURA DO ARQUIVO XML / GET valores do arquivo XML
-
-with open('tests/afd.xml', 'r') as f:
-    file = f.read()
-
-soup = BeautifulSoup(file, 'xml')
-
-lines_states = soup.find_all('state')
-STATES = []
-for line in lines_states:
-    STATES.append(line['value'])
-
-lines_symbols = soup.find_all('symbol')
-SYMBOLS = []
-for line in lines_symbols:
-    SYMBOLS.append(line['value'])
-
-TRANSITIONS = soup.find_all('transition')
-
-lines_delimeters = soup.find_all('delimiter')
-DELIMETERS = []
-for line in lines_delimeters:
-    DELIMETERS.append(line['value'])
-
-lines_finalState = soup.find_all('finalState')
-FINAL_STATE = None
-for line in lines_finalState:
-    FINAL_STATE = line['id']
-
-lines_initialState = soup.find_all('initialState')
-INITIAL_STATE = None
-for line in lines_initialState:
-    INITIAL_STATE = line['id']
 
 class DFA:
 
-    def __init__(self):
+    def __init__(self, states, symbols, transitions, delimiters, final_state, initial_state):
         """Initialize DFSM object"""
-        self.Q = self.populate_states()
-        self.SIGMA = self.populate_alphabet()
-        self.DELTA = self.populate_transition_function()
-        self.START_STATE, self.ACCEPT_STATES = self.set_start_accept()
-        self.CURRENT_STATE = None
+        self.states = states
+        self.symbols = symbols
+        self.transitions = transitions
+        self.delimiters = delimiters
+        self.final_state = final_state
+        self.initial_state = initial_state
 
-    def leituraarquivo(self):
-        palavras_arquivo = ""
+        self.q = self.populate_states()
+        self.sigma = self.populate_alphabet()
+        self.delta = self.populate_transition_function()
+        self.state_state, self.accept_states = self.__set_start_accept()
+        self.current_state = None
+
+    @staticmethod
+    def read_machine_file(file_path):
+        with open(file_path, 'r') as f:
+            file = f.read()
+
+        soup = BeautifulSoup(file, 'xml')
+
+        lines_states = soup.find('states').find_all('state')
+        states = []
+        for line in lines_states:
+            states.append(line['id'])
+
+        lines_symbols = soup.find('symbols').find_all('symbol')
+        symbols = []
+        for line in lines_symbols:
+            symbols.append(line['id'])
+
+        lines_transitions = soup.find('transitions').find_all('transition')
+        transitions = []
+        for line in lines_transitions:
+            transitions.append({
+                'from': line['from'],
+                'to': line['to'],
+                'symbol': line['symbol']
+            })
+
+        lines_delimeters = soup.find_all('delimiter')
+        delimiters = []
+        for line in lines_delimeters:
+            delimiters.append(line['value'])
+
+        lines_final_states = soup.find('finalStates').find_all('finalState')
+        final_states = None
+        for line in lines_final_states:
+            final_states = line['id']
+
+        lines_initial_state = soup.find_all('initialState')
+        initial_state = None
+        for line in lines_initial_state:
+            initial_state = line['id']
+
+        return (states, symbols, transitions, delimiters, final_states, initial_state)
+
+    def populate_states(self):
+        return self.states
+
+    def populate_alphabet(self):
+        return self.symbols
+
+    def populate_transition_function(self):
+        """Creates the transition function (Q X SIGMA -> Q) and prints it out"""
+        transition_dict = {el: {el_2: 'REJECT' for el_2 in self.sigma} for el in self.q}
+
+        for _ in transition_dict.items():
+            for transition in self.transitions:
+                transition_dict[transition['from']][transition['symbol']] = transition['to']
+
+        return transition_dict
+
+    def extract_tokens(self, str_input):
         vet_palavra = []
         palavra = ""
         rascunho_palavra = ""
         cont = 0
         verifica_delimitador_unico = False
 
-        with open("tests/leitura.txt", "r") as arquivo:
-            palavras_arquivo = arquivo.read()
-        for i in palavras_arquivo:
+        for i in str_input:
             rascunho_palavra += i
-            achou_delimitador = [outros in DELIMETERS for outros in rascunho_palavra]
-            if ((len(palavras_arquivo) == 1) and achou_delimitador[cont] == True):
+            achou_delimitador = [outros in self.delimiters for outros in rascunho_palavra]
+            
+            if ((len(str_input) == 1) and achou_delimitador[cont] == True):
                 verifica_delimitador_unico = True
                 break
             elif (achou_delimitador[cont] == False):
@@ -67,83 +95,44 @@ class DFA:
             else:
                 vet_palavra.append(palavra)
                 palavra = ""
+            
             cont += 1
+
         if(verifica_delimitador_unico != True):
             vet_palavra.append(palavra)
+
         return vet_palavra
 
-    def set_start_accept(self):
+    def __set_start_accept(self):
         """Takes user input for START_STATE and ACCEPT_STATE, and checks if it's a valid state (if it belongs to Q)"""
-        # while (True):
-        start = INITIAL_STATE
-        # print("ESTADO INICIAL: {}".format(start))
-        accept = FINAL_STATE
-        # print("ESTADO FINAL: {}".format(accept))
-
+        start = self.initial_state
+        accept = self.final_state
         return start, accept
 
-    def populate_states(self):
-        # print("ESTADOS: {}".format(STATES))
-        return STATES
-
-    def populate_alphabet(self):
-        # print("ALFABETO: {}".format(SYMBOLS))
-        return SYMBOLS
-
-    def populate_transition_function(self):
-        """Creates the transition function (Q X SIGMA -> Q) and prints it out"""
-        transition_dict = {el: {el_2: 'REJECT' for el_2 in self.SIGMA} for el in self.Q}
-
-        for key in transition_dict.items():
-            for transition in TRANSITIONS:
-                transition_dict[transition['from']][transition['symbol']] = transition['to']
-
-        # print("\nFUNÇÃO TRANSIÇÃO Q X SIGMA -> Q")
-        # print("ESTADO ATUAL\tALFABETO DE ENTRADA\tPRÓXIMO ESTADO")
-        # for key, dict_value in transition_dict.items():
-        #     for input_alphabet, transition_state in dict_value.items():
-        #         print("{}\t\t{}\t\t{}".format(key, input_alphabet, transition_state))
-
-        return transition_dict
-
-    def run_state_transition(self, input_symbol):
+    def __run_state_transition(self, input_symbol):
         """Takes in current state and goes to next state based on input symbol."""
-        if (self.CURRENT_STATE == 'REJECT'):
+        if (self.current_state == 'REJECT'):
             return False
-        # print("ESTADO ATUAL : {}\tSÍMBOLOS DE ENTRADA : {}\t PRÓXIMO ESTADO : {}".format(self.CURRENT_STATE, input_symbol,self.DELTA[self.CURRENT_STATE][input_symbol]))
-        self.CURRENT_STATE = self.DELTA[self.CURRENT_STATE][input_symbol]
-        return self.CURRENT_STATE
 
-    def check_if_accept(self):
-        """Checks if the current state is one of the accept states."""
-        if self.CURRENT_STATE in self.ACCEPT_STATES:
-            return True
+        if input_symbol not in self.symbols:
+            self.current_state = 'REJECT'
         else:
-            return False
+            self.current_state = self.delta[self.current_state][input_symbol]
+        
+        return self.current_state
 
     def run_machine(self, in_string):
         """Run the machine on input string"""
-        self.CURRENT_STATE = INITIAL_STATE
+        self.current_state = self.initial_state
+        
         for ele in in_string:
-            check_state = self.run_state_transition(ele)
+            check_state = self.__run_state_transition(ele)
+            
             # Check if new state is not REJECT
             if (check_state == 'REJECT'):
                 return False
-        return self.check_if_accept()
 
-if __name__ == "__main__":
-    check = True
-    # print("\nMáquina de AFD.")
-    machine = DFA()
-    while (check):
-        choice = int(input("\nEscolha uma opção:\n1. Exit\n2. Execute a palavra no AFD\nDigite a sua escolha : "))
-        if (choice == 1):
-            sys.exit()
-        elif (choice == 2):
-            palavras = machine.leituraarquivo()
-            resultado = open("resultado.txt", "w")
-            for palavra in palavras:
-                resultado.write("{} : ACEITA\n".format(palavra) if machine.run_machine(palavra) else "{} : Erro lexico!\n".format(palavra))
-            resultado.close()
+        if self.current_state in self.accept_states:
+            return True
         else:
-            check = False
+            return False

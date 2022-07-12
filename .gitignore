@@ -1,2 +1,5 @@
 output.txt
 *.output.txt
+__pycache__
+.DS_Store
+.vscode

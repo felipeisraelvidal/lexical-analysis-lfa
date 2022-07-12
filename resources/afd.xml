@@ -1,13 +1,13 @@
 <AFD>
     <symbols>
-        <symbol id="0" value="a" />
-        <symbol id="1" value="b" />
-        <symbol id="2" value="c" />
+        <symbol id="a" />
+        <symbol id="b" />
+        <symbol id="c" />
     </symbols>
     <states>
-        <state id="0" value="q0" />
-        <state id="1" value="q1" />
-        <state id="2" value="q2" />
+        <state id="q0" />
+        <state id="q1" />
+        <state id="q2" />
     </states>
     <transitions>
         <transition from="q0" to="q1" symbol="a" />
