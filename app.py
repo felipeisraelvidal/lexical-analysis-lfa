@@ -1,42 +1,5 @@
 import getopt, sys
-from unittest import result
 from DFA import DFA
-from bs4 import BeautifulSoup
-
-def read_machine_file(file_path):
-    with open(file_path, 'r') as f:
-        file = f.read()
-
-    soup = BeautifulSoup(file, 'xml')
-
-    lines_states = soup.find('states').find_all('state')
-    states = []
-    for line in lines_states:
-        states.append(line['id'])
-
-    lines_symbols = soup.find('symbols').find_all('symbol')
-    symbols = []
-    for line in lines_symbols:
-        symbols.append(line['id'])
-
-    transitions = soup.find('transitions').find_all('transition')
-
-    lines_delimeters = soup.find_all('delimiter')
-    delimiters = []
-    for line in lines_delimeters:
-        delimiters.append(line['value'])
-
-    lines_final_states = soup.find('finalStates').find_all('finalState')
-    final_states = None
-    for line in lines_final_states:
-        final_states = line['id']
-
-    lines_initial_state = soup.find_all('initialState')
-    initial_state = None
-    for line in lines_initial_state:
-        initial_state = line['id']
-
-    return (states, symbols, transitions, delimiters, final_states, initial_state)
 
 def read_input_file(file_path):
     with open(file_path, "r") as arquivo:
@@ -97,7 +60,7 @@ def main(argv):
         elif opt in ("-o", "--ofile"):
             output_file = arg
 
-    afd = read_machine_file(machine_file)
+    afd = DFA.read_machine_file(machine_file)
     machine = DFA(afd[0], afd[1], afd[2], afd[3], afd[4], afd[5])
 
     str_input = read_input_file(input_file)

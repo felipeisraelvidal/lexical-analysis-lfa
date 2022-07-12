@@ -1,3 +1,5 @@
+from bs4 import BeautifulSoup
+
 class DFA:
 
     def __init__(self, states, symbols, transitions, delimiters, final_state, initial_state):
@@ -14,6 +16,49 @@ class DFA:
         self.delta = self.populate_transition_function()
         self.state_state, self.accept_states = self.__set_start_accept()
         self.current_state = None
+
+    @staticmethod
+    def read_machine_file(file_path):
+        with open(file_path, 'r') as f:
+            file = f.read()
+
+        soup = BeautifulSoup(file, 'xml')
+
+        lines_states = soup.find('states').find_all('state')
+        states = []
+        for line in lines_states:
+            states.append(line['id'])
+
+        lines_symbols = soup.find('symbols').find_all('symbol')
+        symbols = []
+        for line in lines_symbols:
+            symbols.append(line['id'])
+
+        lines_transitions = soup.find('transitions').find_all('transition')
+        transitions = []
+        for line in lines_transitions:
+            transitions.append({
+                'from': line['from'],
+                'to': line['to'],
+                'symbol': line['symbol']
+            })
+
+        lines_delimeters = soup.find_all('delimiter')
+        delimiters = []
+        for line in lines_delimeters:
+            delimiters.append(line['value'])
+
+        lines_final_states = soup.find('finalStates').find_all('finalState')
+        final_states = None
+        for line in lines_final_states:
+            final_states = line['id']
+
+        lines_initial_state = soup.find_all('initialState')
+        initial_state = None
+        for line in lines_initial_state:
+            initial_state = line['id']
+
+        return (states, symbols, transitions, delimiters, final_states, initial_state)
 
     def populate_states(self):
         return self.states
