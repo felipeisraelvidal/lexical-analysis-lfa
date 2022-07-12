@@ -1,4 +1,5 @@
 import getopt, sys
+from unittest import result
 from DFA import DFA
 from bs4 import BeautifulSoup
 
@@ -53,14 +54,16 @@ def start_analysis(machine, str_input, output_file):
     number_of_accepted_tokens = 0
     number_of_invalid_tokens = 0
     
+    max_token_length = len(max(tokens, key=len))
+    print(max_token_length)
     for token in tokens:
         if token != '':
             if machine.run_machine(token):
                 number_of_accepted_tokens += 1
-                resultado.write("\t{}\t\t\tACCEPTED\n".format(token))
+                resultado.write(f"\t{f'{token}':<{max_token_length + 5}}{'ACCEPTED'}\n")
             else:
                 number_of_invalid_tokens += 1
-                resultado.write("\t{}\t\t\tLEXICAL ERROR\n".format(token))
+                resultado.write(f"\t{f'{token}':<{max_token_length + 5}}{'LEXICAL ERROR'}\n")
     
     resultado.write('\n------------------------------\n')
     resultado.write(f'Number of tokens analyzed: {number_of_accepted_tokens + number_of_invalid_tokens}\n')
