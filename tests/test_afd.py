@@ -3,6 +3,11 @@ from DFA import DFA
 
 class TestAFD(unittest.TestCase):
 
+    def __init__(self, methodName):
+        super().__init__(methodName)
+
+        self.machine = DFA()
+
     def test_ABC(self):
         self.assertTrue(True)
 
