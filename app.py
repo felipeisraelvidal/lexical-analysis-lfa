@@ -61,6 +61,11 @@ def main(argv):
         print('Invalid machine file or output file')
         sys.exit()
 
+    is_valid_extension = validate_file_extension(output_file, '.txt')
+    if is_valid_extension == False:
+        print('Invalid output file extension')
+        sys.exit()
+
     afd = DFA.read_machine_file(machine_file)
     machine = DFA(afd[0], afd[1], afd[2], afd[3], afd[4], afd[5])
 
@@ -76,6 +81,11 @@ def main(argv):
             input_file = input('path: ')
             if input_file == '':
                 input_file = default_input_file_path
+
+            is_valid_extension = validate_file_extension(input_file, '.txt')
+            if is_valid_extension == False:
+                print('Invalid input file extension')
+                sys.exit()
             
             print('------------------------------------------------------------')
 
