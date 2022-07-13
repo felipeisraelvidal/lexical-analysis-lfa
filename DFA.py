@@ -1,4 +1,7 @@
+import imp
+import sys
 from bs4 import BeautifulSoup
+from helpers import validate_file_extension
 
 class DFA:
 
@@ -19,6 +22,12 @@ class DFA:
 
     @staticmethod
     def read_machine_file(file_path):
+
+        is_valid_extension = validate_file_extension(file_path, '.xml')
+        if is_valid_extension == False:
+            print('Invalid machine file extension')
+            sys.exit()
+
         with open(file_path, 'r') as f:
             file = f.read()
 
